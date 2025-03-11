@@ -67,6 +67,88 @@ SELECT title, rating
     WHERE rating NOT IN ("R", "PG-13");
     
 
+/*  9. Encuentra la cantidad total de películas en cada clasificación de la tabla film y 
+muestra la clasificación junto con el recuento.*/
+
+SELECT *
+	FROM film;  -- rating
+
+SELECT rating, COUNT(film_id) AS pelis_por_categoria
+	FROM film
+    GROUP BY rating;
+
+/* 10.Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, 
+su nombre y apellido junto con la cantidad de películas alquila*/
+
+SELECT *
+	FROM customer;  -- customerID, firsname, lasname
+    
+SELECT *
+	FROM rental;  -- customerID, inventory_id
+
+
+
+SELECT c.first_name, c.last_name, COUNT(r.inventory_id) AS total_pelis
+	FROM customer AS c
+    INNER JOIN rental AS r
+		ON c.customer_id = r.customer_id
+	GROUP BY c.customer_id;
+
+
+/* 11. Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoría
+junto con el recuento de alquileres.*/
+
+SELECT *
+	FROM rental; -- rental_id, inventory_id
+
+SELECT *
+	FROM inventory;  -- inventory_id, film_id
+
+/*SELECT *
+	FROM film; -- film_id, title*/
+
+SELECT *
+	FROM film_category;  -- film_id, category_id
+
+SELECT *
+	FROM category; -- category_id, name
+
+
+SELECT c.name AS categoria, COUNT(r.rental_id) AS total_alquileres
+	FROM rental AS r
+    INNER JOIN inventory AS i    -- > con este inner conecto rental con film_category a traves de inventory_id, y asi voy conectando tablas.
+    ON i.inventory_id = r.inventory_id
+    INNER JOIN film_category AS f    
+    ON f.film_id = i.film_id
+    INNER JOIN category AS c
+    ON c.category_id = f.category_id
+	GROUP BY c.category_id;  
+
+
+/* 12.Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra 
+la clasificación junto con el promedio de duración.*/
+
+
+
+
+    
+      
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
