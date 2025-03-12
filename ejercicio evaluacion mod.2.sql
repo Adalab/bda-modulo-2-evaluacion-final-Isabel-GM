@@ -12,7 +12,13 @@ SELECT DISTINCT title
 SELECT *	
 	FROM film; --  title, rating
 
-SELECT title, rating
+/*SELECT title, rating
+	FROM film
+    WHERE rating = "PG-13";*/
+    
+-- solucion: solo piden title:
+
+SELECT title
 	FROM film
     WHERE rating = "PG-13";
 
@@ -30,14 +36,24 @@ SELECT title, description
 SELECT *	
 	FROM film;  -- title, lenght
 
-SELECT title, length
+/*SELECT title, length
+	FROM film
+    WHERE length > 120;*/
+
+-- Solucion: solo piden título:
+
+SELECT title
 	FROM film
     WHERE length > 120;
 
 -- 5.Recupera los nombres de todos los actores.
 
+-- Asi sólo seria nombre:
+
 SELECT first_name
 	FROM actor;
+    
+-- Así seria nombre completo:
 
 SELECT CONCAT(first_name, ' ', last_name) AS nombre_completo
 	FROM actor;
@@ -62,7 +78,13 @@ clasificación.*/
 SELECT *
 	FROM film; -- title, rating
 
-SELECT title, rating
+/*SELECT title, rating
+	FROM film 
+    WHERE rating NOT IN ("R", "PG-13");*/
+
+-- Solucion solo con titulo:
+
+SELECT title
 	FROM film 
     WHERE rating NOT IN ("R", "PG-13");
     
@@ -86,9 +108,7 @@ SELECT *
 SELECT *
 	FROM rental;  -- customerID, inventory_id
 
-
-
-SELECT c.first_name, c.last_name, COUNT(r.inventory_id) AS total_pelis
+SELECT c.customer_id, c.first_name, c.last_name, COUNT(r.inventory_id) AS total_pelis
 	FROM customer AS c
     INNER JOIN rental AS r
 		ON c.customer_id = r.customer_id
@@ -103,9 +123,6 @@ SELECT *
 
 SELECT *
 	FROM inventory;  -- inventory_id, film_id
-
-/*SELECT *
-	FROM film; -- film_id, title*/
 
 SELECT *
 	FROM film_category;  -- film_id, category_id
@@ -170,9 +187,9 @@ SELECT rating, AVG(length) AS duracion_promedio
 SELECT *
 	FROM film; -- title, descripcion
     
-SELECT title, description
+/* SELECT title, description
 	FROM film
-    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";  -- Aqui pongo la columna descripcion solo para comprobar
+    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %"; */ -- Aqui pongo la columna descripcion solo para comprobar
 
                      -- Solucion sin "description":
 
@@ -188,13 +205,6 @@ Select *
 SELECT *
 	FROM film_actor; -- actorID, filmID.
 
-/*SELECT a.actor_id
-	FROM actor AS a
-    INNER JOIN film_actor AS fa
-    USING (actor_id)
-    WHERE actor_id NOT IN film_id;*/
-
-
 SELECT a.actor_id
 	FROM actor AS a
     LEFT JOIN film_actor AS fa
@@ -206,12 +216,13 @@ SELECT a.actor_id
 SELECT *
 	FROM film;  -- title, release_year
     
-SELECT title, release_year
+SELECT title -- release_year inhabilito esto porque no lo pide en el output.
 	FROM film
     WHERE release_year >= 2005 AND release_year <= 2010;
 
+-- tambien se puede hacer con BETWEEN:
 
-SELECT title, release_year
+SELECT title -- release_year
 FROM film
 WHERE release_year BETWEEN 2005 AND 2010;
 
@@ -226,7 +237,17 @@ SELECT *
 SELECT *
 	FROM category; -- category_id, name     Family = category_id 8
 
-SELECT f.title, c.name AS categoria
+/*SELECT f.title, c.name AS categoria
+	FROM film AS f
+    LEFT JOIN film_category AS fc
+    ON fc.film_id = f.film_id
+    LEFT JOIN category AS c
+    ON fc.category_id = c.category_id
+    WHERE c.name = "FAMILY";*/
+
+     -- solucion : solo piden que muestre los titulos.
+     
+SELECT f.title AS  peliculas_familiares
 	FROM film AS f
     LEFT JOIN film_category AS fc
     ON fc.film_id = f.film_id
@@ -243,23 +264,30 @@ SELECT *
 	FROM film_actor;  -- ACTOR_ID, FILM_ID
 
 
-SELECT a.first_name, a.last_name, COUNT(fa.film_id) AS total_pelis
+/*SELECT a.first_name, a.last_name, COUNT(fa.film_id) AS total_pelis
 	FROM actor AS a
     INNER JOIN film_actor AS fa
     USING (actor_id)
     GROUP BY a.actor_id
-    HAVING COUNT(fa.film_id) >10; -- para filtrar los que han actuado mas de 10 veces. Va siempre despues de group by.
+    HAVING COUNT(fa.film_id) >10; */ -- para filtrar los que han actuado mas de 10 veces. Va siempre despues de group by.
     
+    -- Solucion: solo piden nombre
     
+    SELECT CONCAT(a.first_name," ", a.last_name) AS Nombre_completo
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+    USING (actor_id)
+    GROUP BY a.actor_id
+    HAVING COUNT(fa.film_id) >10;
     
 -- 19. Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
 
 SELECT *
 	FROM film; -- title, rating (R), length
 
-SELECT title, rating, length
+/*SELECT title, rating, length
 	FROM film
-    WHERE rating = "R" AND length > 120; 
+    WHERE rating = "R" AND length > 120; */
 
 		-- Solucion: sólo pide el titulo.
 
@@ -294,7 +322,6 @@ SELECT c.name, AVG(f.length) AS duracion
 /* 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la 
 cantidad de películas en las que han actuado*/
 
--- igual que el ejercicio 18?
 
 SELECT *
 	FROM actor;  -- actor_id, first_name, last_name.
@@ -315,7 +342,7 @@ subconsulta para encontrar los rental_ids con una duracion superior a 5 dias y l
  correspondientes.*/
 
 SELECT *
-	FROM rental; -- rental_id, inventory_id
+	FROM rental; -- rental_id, inventory_id, rental_date, return_date
 
 SELECT *
 	FROM inventory; -- inventory_id, film_id
@@ -323,7 +350,7 @@ SELECT *
 SELECT *
 	FROM film;  -- film_id, title, rental_duration
 
-SELECT film_id, title,  rental_duration
+/*SELECT film_id, title,  rental_duration
 	FROM film
 	WHERE rental_duration > 5;
 
@@ -335,7 +362,24 @@ SELECT r.rental_id, f.title
     USING (film_id)
     WHERE film_id IN (SELECT  film_id  -- filtro solo las pelis que esten en la subconsulta, es decir, firmid de film pero solo las de alquiler sup. a 5.
 									FROM film
-									WHERE rental_duration > 5);
+									WHERE rental_duration > 5);*/
+                                    
+-- Solucion: modificado con rental_date y return_date,
+
+SELECT rental_id, DATEDIFF(return_date,rental_date) 
+	FROM rental;
+
+SELECT r.rental_id, f.title
+	FROM rental AS r
+    INNER JOIN inventory AS i
+    USING (inventory_id)
+    INNER JOIN film AS f
+    USING (film_id)
+    WHERE r.rental_id IN (  SELECT rental_id
+							FROM rental
+                            WHERE DATEDIFF(return_date,rental_date) > 5);
+									
+
 								
 /* 23. Encuentra el nombre y apellido de los actores que NOOOOOOOO han actuado en ninguna pelicula de la categoria 
 "Horror". Utiliza una subconsulta para encontrar los actores que han actuado en peliculas de la categoria "Horror" y 
@@ -394,7 +438,7 @@ SELECT film_id
 							
 -- en la subconsulta asocio solo los film_id que son comedia 
 
-SELECT title, length
+SELECT title,length
 	FROM film AS f
     WHERE length > 180 AND film_id IN (SELECT film_id
 											FROM film_category AS fc
