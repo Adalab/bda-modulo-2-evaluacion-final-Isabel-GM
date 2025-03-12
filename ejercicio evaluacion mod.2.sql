@@ -172,7 +172,7 @@ SELECT *
     
 SELECT title, description
 	FROM film
-    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";  -- Aque pongo la columna descripcion solo para comprobar
+    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";  -- Aqui pongo la columna descripcion solo para comprobar
 
                      -- Solucion sin "description":
 
@@ -242,9 +242,6 @@ SELECT *
 SELECT *
 	FROM film_actor;  -- ACTOR_ID, FILM_ID
 
-SELECT *
-	FROM film;  -- film_id, title esta columna creo que no me hace falta
-
 
 SELECT a.first_name, a.last_name, COUNT(fa.film_id) AS total_pelis
 	FROM actor AS a
@@ -269,6 +266,188 @@ SELECT title, rating, length
 SELECT title
 	FROM film
     WHERE rating = "R" AND length > 120; 
+
+/*  20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y
+muestra el nombre de la categoría junto con el promedio de duración.*/
+
+SELECT *
+	FROM category; -- CATEGORY_ID, NAME
+
+SELECT *
+	FROM film_category;  -- FILM_ID, CATEGORY_ID
+
+SELECT *
+	FROM film;  -- FILM_ID, LENGHT
+
+SELECT AVG(length)
+	FROM film;   -- AVG = 115.272
+
+SELECT c.name, AVG(f.length) AS duracion
+	FROM category AS c
+    INNER JOIN film_category AS fa
+    USING (category_id)
+    INNER JOIN film AS f
+    USING (film_id)
+    GROUP BY c.name
+    HAVING AVG(f.length) > 120;
+
+/* 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la 
+cantidad de películas en las que han actuado*/
+
+-- igual que el ejercicio 18?
+
+SELECT *
+	FROM actor;  -- actor_id, first_name, last_name.
+
+SELECT *
+	FROM film_actor;  -- ACTOR_ID, FILM_ID
+
+
+SELECT a.first_name, COUNT(fa.film_id) AS total_pelis
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+    USING (actor_id)
+    GROUP BY a.actor_id
+    HAVING COUNT(fa.film_id) >= 5; 
+
+/*  22.Encuentra el título de todas las películas que fueron alquilas por más de 5 dias. Utiliza una 
+subconsulta para encontrar los rental_ids con una duracion superior a 5 dias y luego selecciona las peliculas
+ correspondientes.*/
+
+SELECT *
+	FROM rental; -- rental_id, inventory_id
+
+SELECT *
+	FROM inventory; -- inventory_id, film_id
+    
+SELECT *
+	FROM film;  -- film_id, title, rental_duration
+
+SELECT film_id, title,  rental_duration
+	FROM film
+	WHERE rental_duration > 5;
+
+SELECT r.rental_id, f.title
+	FROM rental AS r
+    INNER JOIN inventory AS i
+    USING (inventory_id)
+    INNER JOIN film AS f
+    USING (film_id)
+    WHERE film_id IN (SELECT  film_id  -- filtro solo las pelis que esten en la subconsulta, es decir, firmid de film pero solo las de alquiler sup. a 5.
+									FROM film
+									WHERE rental_duration > 5);
+								
+/* 23. Encuentra el nombre y apellido de los actores que NOOOOOOOO han actuado en ninguna pelicula de la categoria 
+"Horror". Utiliza una subconsulta para encontrar los actores que han actuado en peliculas de la categoria "Horror" y 
+ luego excluyelos de la lista de actores.*/
+
+SELECT *
+	FROM actor; -- actor_id, first_name, last_name
+
+SELECT *
+	FROM film_actor;  -- actor_id, film_id
+
+SELECT *
+	FROM film_category;  -- film_id, category_id
+
+SELECT *
+	FROM category;  -- category_id, name
+    
+
+SELECT first_name, last_name  -- selecciono nombre y apellido de la tabla actor pero que ese actor no este en:
+	FROM actor AS a
+    WHERE actor_id NOT IN(       
+							SELECT actor_id        -- busco actor_ids de los que si aparecen en categoria Horror, junto con inner join hasta llegar a categoria 
+								FROM film_actor AS f
+                                INNER JOIN film_category AS fc
+                                USING (film_id)
+                                INNER JOIN category AS c
+                                USING (category_id)
+                                WHERE name = "Horror");
+
+-- con esta query ya excluyo a los que no aparecen en esa categoria al poner not in.
+
+/* 24. Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.*/
+
+SELECT *
+	FROM film;   -- film_id, title, lenght
+    
+SELECT *
+	FROM film_category;  -- film_id, category_id
+
+SELECT *
+	FROM category;  -- category_id, name
+
+SELECT title, length
+	FROM film
+    WHERE length > 180; 
+
+
+SELECT category_id
+	FROM category
+	WHERE name = "Comedy";  -- COMEDY ES CATEGORY=5
+
+SELECT film_id
+	FROM film_category
+    WHERE category_id = 5;
+
+							
+-- en la subconsulta asocio solo los film_id que son comedia 
+
+SELECT title, length
+	FROM film AS f
+    WHERE length > 180 AND film_id IN (SELECT film_id
+											FROM film_category AS fc
+											INNER JOIN category AS c
+											USING (category_id)
+											WHERE name = "Comedy");
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 
