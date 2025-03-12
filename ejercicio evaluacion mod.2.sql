@@ -16,7 +16,7 @@ SELECT *
 	FROM film
     WHERE rating = "PG-13";*/
     
--- solucion: solo piden title:
+-- solución: solo piden title:
 
 SELECT title
 	FROM film

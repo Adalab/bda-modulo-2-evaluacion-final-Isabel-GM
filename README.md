@@ -10,12 +10,12 @@ Este ejercicio se centra en la exploración y análisis de datos de la base de d
 
 # Objetivo
 
-El objetivo principal ha sido practicar y consolidar el uso de SQL aprendido en este modulo. A lo largo del ejercicio, he abordado preguntas relacionadas con la gestión de películas, actores, clientes y transacciones de alquiler.
+El objetivo principal ha sido practicar y consolidar el uso de SQL aprendido en este módulo. A lo largo del ejercicio, he abordado preguntas relacionadas con la gestión de películas, actores, clientes y transacciones de alquiler.
 
 
 # Estructura de la Base de Datos
 
-La base de datos Sakila contiene numerosas tablas conectadas entre si. A continuación, añado en un pequeño esquema con las relaciones mas relevantes.
+La base de datos Sakila contiene numerosas tablas conectadas entre sí. A continuación, añado un pequeño esquema con las relaciones mas relevantes.
 
 - Tablas Principales:
 
