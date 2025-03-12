@@ -129,16 +129,56 @@ SELECT c.name AS categoria, COUNT(r.rental_id) AS total_alquileres
 la clasificación junto con el promedio de duración.*/
 
 
+SELECT *
+	FROM film;  -- agrupar por rating,y media de lenght 
+
+SELECT rating, AVG(length) AS duracion_promedio
+	FROM film
+    GROUP BY rating;
 
 
-    
+  -- 13. Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
+
+    SELECT *
+		FROM actor;  -- first_name, last_name, id_actor
+	
+    SELECT *
+		FROM film_actor;  -- actor_id, film_id
+        
+    SELECT *	
+		FROM film;  -- title, film_id
+	
+    SELECT first_name, last_name
+		FROM actor;
+	
+    SELECT title
+		FROM film
+        WHERE title =  "Indian Love";
+	
+    SELECT a.first_name, a.last_name
+		FROM actor AS a
+        INNER JOIN film_actor AS fa
+        USING (actor_id)
+        INNER JOIN film AS f
+        USING (film_id)
+        WHERE f.title = "Indian Love";
+	
       
 
-
+-- 14. Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción
     
+SELECT *
+	FROM film; -- title, descripcion
+    
+SELECT title, description
+	FROM film
+    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";  -- Aque pongo la columna descripcion solo para comprobar
 
+-- Solucion sin "description":
 
-
+SELECT title
+	FROM film
+    WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";
 
 
 
