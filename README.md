@@ -49,14 +49,15 @@ Durante el ejercicio, he desarrollado una serie de consultas SQL para responder 
 Incluyo un ejemplo de una consulta que he realizado para obtener las películas alquiladas por más de 5 días:
 
 ```sql
-SELECT f.title
-FROM film AS f
-INNER JOIN inventory AS i ON f.film_id = i.film_id
-INNER JOIN rental AS r ON i.inventory_id = r.inventory_id
+SELECT r.rental_id, f.title
+FROM rental AS r
+INNER JOIN inventory AS i USING (inventory_id)
+INNER JOIN film AS f USING (film_id)
 WHERE r.rental_id IN (
     SELECT rental_id
     FROM rental
-    WHERE DATEDIFF(return_date, rental_date) > 5);
+    WHERE DATEDIFF(return_date, rental_date) > 5
+);
 ```
 
 **Explicación**: En esta consulta obtengo todas las películas que han sido alquiladas por más de 5 días, utilizando una subconsulta para filtrar los registros de alquiler que cumplen con la condición.
@@ -64,3 +65,9 @@ WHERE r.rental_id IN (
 ## Conclusión
 Este ejercicio me ha permitido realizar un análisis detallado de la base de datos **Sakila** aplicando el temario estudiado a lo largo de este módulo.
 He trabajado con **filtros**, **uniones de tablas** y **subconsultas** consolidando así mi conocimiento en bases de datos.
+
+
+## Feedback y Mejoras 📝
+
+Estoy en constante evolución y siempre estoy abierta a sugerencias o mejoras. Si tienes ideas para optimizar consultas o investigar nuevas preguntas en la base de datos Sakila, no dudes en compartirlas. ¡Todo feedback de mejora es bienvenido! 😊
+
