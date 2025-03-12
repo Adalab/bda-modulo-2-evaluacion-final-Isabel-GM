@@ -217,6 +217,81 @@ WHERE release_year BETWEEN 2005 AND 2010;
 
 -- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family".
 
+SELECT *
+	FROM film; -- film-id, title
+
+SELECT *
+	FROM film_category;  -- film_id, category_id
+
+SELECT *
+	FROM category; -- category_id, name     Family = category_id 8
+
+SELECT f.title, c.name AS categoria
+	FROM film AS f
+    LEFT JOIN film_category AS fc
+    ON fc.film_id = f.film_id
+    LEFT JOIN category AS c
+    ON fc.category_id = c.category_id
+    WHERE c.name = "FAMILY";
+
+-- 18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+
+SELECT *
+	FROM actor;  -- actor_id, first_name, last_name.
+
+SELECT *
+	FROM film_actor;  -- ACTOR_ID, FILM_ID
+
+SELECT *
+	FROM film;  -- film_id, title esta columna creo que no me hace falta
+
+
+SELECT a.first_name, a.last_name, COUNT(fa.film_id) AS total_pelis
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+    USING (actor_id)
+    GROUP BY a.actor_id
+    HAVING COUNT(fa.film_id) >10; -- para filtrar los que han actuado mas de 10 veces. Va siempre despues de group by.
+    
+    
+    
+-- 19. Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
+
+SELECT *
+	FROM film; -- title, rating (R), length
+
+SELECT title, rating, length
+	FROM film
+    WHERE rating = "R" AND length > 120; 
+
+		-- Solucion: sólo pide el titulo.
+
+SELECT title
+	FROM film
+    WHERE rating = "R" AND length > 120; 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
 
 
 
