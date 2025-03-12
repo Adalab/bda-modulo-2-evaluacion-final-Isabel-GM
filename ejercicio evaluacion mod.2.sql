@@ -174,19 +174,48 @@ SELECT title, description
 	FROM film
     WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";  -- Aque pongo la columna descripcion solo para comprobar
 
--- Solucion sin "description":
+                     -- Solucion sin "description":
 
 SELECT title
 	FROM film
     WHERE description LIKE "% DOG %" OR title LIKE "% CAT %";
 
+-- 15. Hay algún actor o actriz que no aparezca en ninguna película en la tabla film_actor.
+
+Select *
+	FROM actor;  -- actor_id
+
+SELECT *
+	FROM film_actor; -- actorID, filmID.
+
+/*SELECT a.actor_id
+	FROM actor AS a
+    INNER JOIN film_actor AS fa
+    USING (actor_id)
+    WHERE actor_id NOT IN film_id;*/
 
 
+SELECT a.actor_id
+	FROM actor AS a
+    LEFT JOIN film_actor AS fa
+    USING (actor_id)
+    WHERE film_id IS NULL;
+
+-- 16.Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
+
+SELECT *
+	FROM film;  -- title, release_year
+    
+SELECT title, release_year
+	FROM film
+    WHERE release_year >= 2005 AND release_year <= 2010;
 
 
+SELECT title, release_year
+FROM film
+WHERE release_year BETWEEN 2005 AND 2010;
 
-
-
+-- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family".
 
 
 
